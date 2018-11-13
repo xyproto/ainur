@@ -4,6 +4,7 @@ import (
 	"debug/elf"
 )
 
+// Describe returns a descriptive string for a given elf.Machine
 func Describe(m elf.Machine) string {
 	// https://golang.org/pkg/debug/elf/
 	switch m {
