@@ -4,7 +4,7 @@ Go module for figuring out which compiler and compiler version was used for comp
 
 ### Utilities that uses Ainur
 
-* [elfinfo](https://github.com/xyproto/elfinfo) [webpage](https://elfinfo.roboticoverlords.org)
+* [elfinfo](https://github.com/xyproto/elfinfo) | [webpage](https://elfinfo.roboticoverlords.org)
 * [cdetect](https://github.com/xyproto/cdetect)
 
 ### Features and limitations
