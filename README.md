@@ -15,6 +15,11 @@ Go module for figuring out which compiler and compiler version was used for comp
 * Works even with stripped executables.
 * Should work for recent versions of all of the above compilers. Executables produced with old versions of the compilers may need more testing.
 
+### Utilities that uses Ainur
+
+* [elfinfo](https://github.com/xyproto/elfinfo)
+* [cdetect](https://github.com/xyproto/cdetect)
+
 ### General info
 
 * Version: 1.0.0
