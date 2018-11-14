@@ -182,6 +182,25 @@ func RustVerStripped(f *elf.File) string {
 	return "Rust"
 }
 
+// DVer returns "DMD" if it is detected
+// Example output: "DMD"
+func DVer(f *elf.File) string {
+	// Check if the .dynstr ELF section exists
+	sec := f.Section(".dynstr")
+	if sec == nil {
+		return ""
+	}
+	b, errData := sec.Data()
+	if errData != nil {
+		return ""
+	}
+	// Look for the DMD marker
+	if bytes.Index(b, []byte("__dmd_")) != -1 {
+		return "DMD"
+	}
+	return ""
+}
+
 // GoVer returns the Go compiler version or an empty string
 // example output: "Go 1.8.3"
 func GoVer(f *elf.File) string {
@@ -274,6 +293,8 @@ func Compiler(f *elf.File) string {
 		return rustVersion
 	} else if rustVersion := RustVerStripped(f); rustVersion != "" {
 		return rustVersion
+	} else if dVersion := DVer(f); dVersion != "" {
+		return dVersion
 	} else if gccVersion := GCCVer(f); gccVersion != "" {
 		return gccVersion
 	} else if pasVersion := PasVer(f); pasVersion != "" {

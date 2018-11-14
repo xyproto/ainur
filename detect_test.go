@@ -33,6 +33,10 @@ func TestRust2(t *testing.T) {
 	assert.Equal(t, MustExamine("testdata/bat"), "Rust (GCC 8.2.1)")
 }
 
+func TestD(t *testing.T) {
+	assert.Equal(t, MustExamine("testdata/dmd"), "DMD")
+}
+
 func TestGCC(t *testing.T) {
 	assert.Equal(t, MustExamine("testdata/afl-analyze"), "GCC 7.2.0")
 }
