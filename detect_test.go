@@ -14,7 +14,7 @@ func TestArchLinuxLs(t *testing.T) {
 }
 
 func TestClang(t *testing.T) {
-	assert.Equal(t, MustExamine("testdata/clang_hello"), "Clang 6.0.0")
+	assert.Equal(t, MustExamine("testdata/clang_hello"), "Clang 8.2.1")
 }
 
 func TestTCC(t *testing.T) {
