@@ -79,10 +79,10 @@ func GCCVer(f *elf.File) string {
 			elements := bytes.SplitN(versionData, gccMarker, 3)
 			versionA := elements[1]
 			versionB := elements[2]
-			if bytes.HasPrefix(versionA, gnuEnding) {
+			if bytes.HasSuffix(versionA, gnuEnding) {
 				versionA = versionA[5:]
 			}
-			if bytes.HasPrefix(versionB, gnuEnding) {
+			if bytes.HasSuffix(versionB, gnuEnding) {
 				versionB = versionB[5:]
 			}
 			if FirstIsGreater(string(versionA), string(versionB)) {
