@@ -1,16 +1,5 @@
 language: go
 
 go:
-  - "1.10"
   - "1.11"
-
-os:
-  - linux
-
-dist: trusty
-sudo: false
-install: true
-
-script:
-  - env GO111MODULE=off go build
-  - env GO111MODULE=off go test
+  - "tip"
