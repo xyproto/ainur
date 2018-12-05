@@ -10,7 +10,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"fmt"
 )
 
 var (
@@ -98,7 +97,7 @@ func GCCVer(f *elf.File) string {
 		gccVersion := bytes.TrimSpace(versionCatcher1.Find(versionData))
 		if len(gccVersion) > 0 {
 			if debug {
-				fmt.Println("GCC #1 " + string(gccVersion[2:]))
+				println("GCC #1 " + string(gccVersion[2:]))
 			}
 			return "GCC " + string(gccVersion[2:])
 		}
@@ -107,7 +106,7 @@ func GCCVer(f *elf.File) string {
 		gccVersion = bytes.TrimSpace(versionCatcher2.Find(versionData))
 		if len(gccVersion) > 0 {
 			if debug {
-				fmt.Println("GCC #2 " + string(gccVersion))
+				println("GCC #2 " + string(gccVersion))
 			}
 			return "GCC " + string(gccVersion)
 		}
@@ -116,7 +115,7 @@ func GCCVer(f *elf.File) string {
 		gccVersion = bytes.TrimSpace(versionCatcher3.Find(versionData))
 		if len(gccVersion) > 0 {
 			if debug {
-				fmt.Println("GCC #3 " + string(gccVersion))
+				println("GCC #3 " + string(gccVersion))
 			}
 			return "GCC " + string(gccVersion)
 		}
@@ -124,7 +123,7 @@ func GCCVer(f *elf.File) string {
 		gccVersionString := strings.TrimSpace(string(gccVersion))
 		if len(gccVersionString) > 5 {
 			if debug {
-				fmt.Println("GCC #4 " + string(gccVersion[5:]))
+				println("GCC #4 " + string(gccVersion[5:]))
 			}
 			return "GCC " + string(gccVersion)[5:]
 		}

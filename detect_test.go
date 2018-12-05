@@ -49,6 +49,10 @@ func TestGCC2(t *testing.T) {
 	assert.Equal(t, MustExamine("testdata/gcc820"), "GCC 8.2.0")
 }
 
+func TestGHC(t *testing.T) {
+	assert.Equal(t, MustExamine("testdata/ghc"), "GCC 8.2.1")
+}
+
 func TestVersionCompare(t *testing.T) {
 	assert.Equal(t, FirstIsGreater("2", "1.0.7.abc"), true)
 	assert.Equal(t, FirstIsGreater("2.0", "2.0 alpha1"), true)
