@@ -37,12 +37,16 @@ func TestD(t *testing.T) {
 	assert.Equal(t, MustExamine("testdata/dmd"), "DMD")
 }
 
-func TestGCC(t *testing.T) {
+func TestGCC1(t *testing.T) {
 	assert.Equal(t, MustExamine("testdata/afl-analyze"), "GCC 7.2.0")
 }
 
 func TestPowerPC(t *testing.T) {
 	assert.Equal(t, MustExamine("testdata/e500v2"), "GCC 4.7.2")
+}
+
+func TestGCC2(t *testing.T) {
+	assert.Equal(t, MustExamine("testdata/gcc820"), "GCC 8.2.0")
 }
 
 func TestVersionCompare(t *testing.T) {
