@@ -17,6 +17,7 @@ Go module for figuring out which compiler and compiler version was used for comp
   * Go
   * TCC (compiler name only, TCC does not store the version number in the executables)
   * Rust (for stripped executables, only the compiler name and GCC version used for linking)
+  * GHC
 * Works even with stripped executables.
 * Should work for recent versions of all of the above compilers. Executables produced with old versions of the compilers may need more testing.
 
