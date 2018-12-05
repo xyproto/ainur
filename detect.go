@@ -17,6 +17,7 @@ var (
 	gnuEnding   = []byte("GNU) ")
 	clangMarker = []byte("clang version")
 	rustMarker  = []byte("rustc version")
+	ghcMarker   = []byte("GHC ")
 )
 
 // versionSum takes a slice of strings that are the parts of a version number.
@@ -51,6 +52,28 @@ func FirstIsGreater(a, b string) bool {
 	}
 	// The two lists that are being compared should be of the same length
 	return versionSum(aParts) > versionSum(bParts)
+}
+
+// GHCVer returns the GHC compiler version or an empty string
+// example output: "GHC 8.6.2"
+func GHCVer(f *elf.File) string {
+	sec := f.Section(".comment")
+	if sec == nil {
+		return ""
+	}
+	versionData, errData := sec.Data()
+	if errData != nil {
+		return ""
+	}
+	if bytes.Contains(versionData, ghcMarker) {
+		// Try the first regexp for picking out the version
+		versionCatcher1 := regexp.MustCompile(`GHC\ (\d{1,4}\.)(\d+\.)?(\d+)`)
+		ghcVersion := bytes.TrimSpace(versionCatcher1.Find(versionData))
+		if len(ghcVersion) > 0 {
+			return "GHC " + string(ghcVersion[4:])
+		}
+	}
+	return ""
 }
 
 // GCCVer returns the GCC compiler version or an empty string
@@ -302,6 +325,8 @@ func Compiler(f *elf.File) string {
 		return goVersion
 	} else if ocamlVersion := OCamlVer(f); ocamlVersion != "" {
 		return ocamlVersion
+	} else if ghcVersion := GHCVer(f); ghcVersion != "" {
+		return ghcVersion
 	} else if rustVersion := RustVerUnstripped(f); rustVersion != "" {
 		return rustVersion
 	} else if rustVersion := RustVerStripped(f); rustVersion != "" {
