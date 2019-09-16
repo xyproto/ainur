@@ -45,6 +45,10 @@ func TestPowerPC(t *testing.T) {
 	assert.Equal(t, MustExamine("testdata/e500v2"), "GCC 4.7.2")
 }
 
+func TestPowerPC2(t *testing.T) {
+	assert.Equal(t, MustExamine("testdata/e500v2_gcc8"), "GCC 8.3.0")
+}
+
 func TestGCC2(t *testing.T) {
 	assert.Equal(t, MustExamine("testdata/gcc820"), "GCC 8.2.0")
 }
