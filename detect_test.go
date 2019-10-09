@@ -57,6 +57,10 @@ func TestGHC(t *testing.T) {
 	assert.Equal(t, MustExamine("testdata/ghc"), "GHC 8.6.2")
 }
 
+func TestPowerPC3(t *testing.T) {
+	assert.Equal(t, MustExamine("testdata/nc_e500v2"), "unknown")
+}
+
 func TestVersionCompare(t *testing.T) {
 	assert.Equal(t, FirstIsGreater("2", "1.0.7.abc"), true)
 	assert.Equal(t, FirstIsGreater("2.0", "2.0 alpha1"), true)
