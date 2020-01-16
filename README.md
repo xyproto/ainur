@@ -1,6 +1,6 @@
 # Ainur
 
-[![Build Status](https://travis-ci.org/xyproto/ainur.svg?branch=master)](https://travis-ci.org/xyproto/ainur) [![GoDoc](https://godoc.org/github.com/xyproto/ainur?status.svg)](http://godoc.org/github.com/xyproto/ainur) [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/xyproto/ainur/master/LICENSE) [![Report Card](https://img.shields.io/badge/go_report-A+-brightgreen.svg?style=flat)](http://goreportcard.com/report/xyproto/ainur)
+[![Build Status](https://travis-ci.com/xyproto/ainur.svg?branch=master)](https://travis-ci.com/xyproto/ainur) [![GoDoc](https://godoc.org/github.com/xyproto/ainur?status.svg)](http://godoc.org/github.com/xyproto/ainur) [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/xyproto/ainur/master/LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/xyproto/ainur)](https://goreportcard.com/report/github.com/xyproto/ainur)
 
 Go module for figuring out which compiler and compiler version was used for compiling an executable file for Linux (in the ELF format).
 
