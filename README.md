@@ -25,6 +25,6 @@ Go module for figuring out which compiler and compiler version was used for comp
 
 ### General info
 
-* Version: 1.1.1
+* Version: 1.1.2
 * Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
 * License: MIT
