@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.com/xyproto/ainur.svg?branch=master)](https://travis-ci.com/xyproto/ainur) [![GoDoc](https://godoc.org/github.com/xyproto/ainur?status.svg)](http://godoc.org/github.com/xyproto/ainur) [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/xyproto/ainur/master/LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/xyproto/ainur)](https://goreportcard.com/report/github.com/xyproto/ainur)
 
-Go module for figuring out which compiler and compiler version was used for compiling an executable file for Linux (in the ELF format).
+Go package for figuring out which compiler and compiler version was used for compiling an executable file for Linux (in the ELF format).
 
 ### Utilities that uses Ainur
 
-* [elfinfo](https://github.com/xyproto/elfinfo) | [webpage](https://elfinfo.roboticoverlords.org)
+* [elfinfo](https://github.com/xyproto/elfinfo) ([webpage](https://elfinfo.roboticoverlords.org))
 * [cdetect](https://github.com/xyproto/cdetect)
 
 ### Features and limitations
