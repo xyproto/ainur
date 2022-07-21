@@ -25,6 +25,6 @@ Go package for figuring out which compiler and compiler version was used for com
 
 ### General info
 
-* Version: 1.2.0
+* Version: 1.3.0
 * Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
 * License: BSD-3
