@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// Static checks that the given ELF does not have PT_DYNAMIC in one of the prog headers
+// Static checks that PT_DYNAMIC is not in one of the prog headers of the ELF file
 func Static(f *elf.File) bool {
 	for _, prog := range f.Progs {
 		progType := prog.ProgHeader.Type
