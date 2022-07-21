@@ -1,6 +1,6 @@
 # Ainur
 
-[![GoDoc](https://godoc.org/github.com/xyproto/ainur?status.svg)](http://godoc.org/github.com/xyproto/ainur) [![License](http://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/xyproto/ainur/master/LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/xyproto/ainur)](https://goreportcard.com/report/github.com/xyproto/ainur)
+[![GoDoc](https://godoc.org/github.com/xyproto/ainur?status.svg)](http://godoc.org/github.com/xyproto/ainur) [![License](http://img.shields.io/badge/license-BSD-green.svg?style=flat)](https://raw.githubusercontent.com/xyproto/ainur/master/LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/xyproto/ainur)](https://goreportcard.com/report/github.com/xyproto/ainur)
 
 Go package for figuring out which compiler and compiler version was used for compiling an executable file for Linux (in the ELF format).
 
@@ -27,4 +27,4 @@ Go package for figuring out which compiler and compiler version was used for com
 
 * Version: 1.2.0
 * Author: Alexander F. Rødseth &lt;xyproto@archlinux.org&gt;
-* License: MIT
+* License: BSD-3
