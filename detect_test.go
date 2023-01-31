@@ -62,13 +62,14 @@ func TestPowerPC3(t *testing.T) {
 }
 
 var doNotOptimiseString string
+
 func BenchmarkVoidLinux(b *testing.B) {
 	b.ReportAllocs()
 
 	var result string
-        for n := 0; n < b.N; n++ {
+	for n := 0; n < b.N; n++ {
 		result = MustExamine("testdata/nano_voidlinux")
-        }
+	}
 	doNotOptimiseString = result
 }
 

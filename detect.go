@@ -22,17 +22,16 @@ const (
 )
 
 var (
-	GHCVersionRegex = regexp.MustCompile(`GHC\ (\d{1,4}\.)(\d+\.)?(\d+)`)
-	GoVersionRegex = regexp.MustCompile(`go(\d+\.)(\d+\.)?(\*|\d+)`)
-	PasVersionRegex = regexp.MustCompile(`FPC\ (\d+\.)?(\d+\.)?(\*|\d+)`)
+	GHCVersionRegex   = regexp.MustCompile(`GHC\ (\d{1,4}\.)(\d+\.)?(\d+)`)
+	GoVersionRegex    = regexp.MustCompile(`go(\d+\.)(\d+\.)?(\*|\d+)`)
+	PasVersionRegex   = regexp.MustCompile(`FPC\ (\d+\.)?(\d+\.)?(\*|\d+)`)
 	OcamlVersionRegex = regexp.MustCompile(`(\d+\.)(\d+\.)?(\*|\d+)`)
-	GCCVersionRegex0 = regexp.MustCompile(`(\d+\.)(\d+\.)?(\*|\d+)\ `)
-	GCCVersionRegex1 = regexp.MustCompile(`\) (\d{1,4}\.)(\d+\.)?(\*|\d+)\ `)
-	GCCVersionRegex2 = regexp.MustCompile(` (\d{1,4}\.)(\d+\.)?(\*|\d+)`)
-	GCCVersionRegex3 = regexp.MustCompile(`(\d{1,4}\.)(\d+\.)?(\*|\d+)`)
-	GCCVersionRegex4 = regexp.MustCompile(`\) (\d{1,4}\.)(\d+\.)?(\*|\d+).(\d+)`)
+	GCCVersionRegex0  = regexp.MustCompile(`(\d+\.)(\d+\.)?(\*|\d+)\ `)
+	GCCVersionRegex1  = regexp.MustCompile(`\) (\d{1,4}\.)(\d+\.)?(\*|\d+)\ `)
+	GCCVersionRegex2  = regexp.MustCompile(` (\d{1,4}\.)(\d+\.)?(\*|\d+)`)
+	GCCVersionRegex3  = regexp.MustCompile(`(\d{1,4}\.)(\d+\.)?(\*|\d+)`)
+	GCCVersionRegex4  = regexp.MustCompile(`\) (\d{1,4}\.)(\d+\.)?(\*|\d+).(\d+)`)
 )
-
 
 var (
 	// compilerVersionFunctions is a slice of functions that can be used
