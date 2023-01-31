@@ -22,6 +22,19 @@ const (
 )
 
 var (
+	GHCVersionRegex = regexp.MustCompile(`GHC\ (\d{1,4}\.)(\d+\.)?(\d+)`)
+	GoVersionRegex = regexp.MustCompile(`go(\d+\.)(\d+\.)?(\*|\d+)`)
+	PasVersionRegex = regexp.MustCompile(`FPC\ (\d+\.)?(\d+\.)?(\*|\d+)`)
+	OcamlVersionRegex = regexp.MustCompile(`(\d+\.)(\d+\.)?(\*|\d+)`)
+	GCCVersionRegex0 = regexp.MustCompile(`(\d+\.)(\d+\.)?(\*|\d+)\ `)
+	GCCVersionRegex1 = regexp.MustCompile(`\) (\d{1,4}\.)(\d+\.)?(\*|\d+)\ `)
+	GCCVersionRegex2 = regexp.MustCompile(` (\d{1,4}\.)(\d+\.)?(\*|\d+)`)
+	GCCVersionRegex3 = regexp.MustCompile(`(\d{1,4}\.)(\d+\.)?(\*|\d+)`)
+	GCCVersionRegex4 = regexp.MustCompile(`\) (\d{1,4}\.)(\d+\.)?(\*|\d+).(\d+)`)
+)
+
+
+var (
 	// compilerVersionFunctions is a slice of functions that can be used
 	// for discovering a version string from an ELF file, ordered from
 	// the more specific to the more ambigous ones.
@@ -85,8 +98,7 @@ func GHCVer(f *elf.File) (ver string) {
 	}
 	if bytes.Contains(versionData, []byte(ghcMarker)) {
 		// Try the first regexp for picking out the version
-		versionCatcher1 := regexp.MustCompile(`GHC\ (\d{1,4}\.)(\d+\.)?(\d+)`)
-		ghcVersion := bytes.TrimSpace(versionCatcher1.Find(versionData))
+		ghcVersion := bytes.TrimSpace(GHCVersionRegex.Find(versionData))
 		if len(ghcVersion) > 0 {
 			return "GHC " + string(ghcVersion[4:])
 		}
@@ -110,8 +122,7 @@ func GCCVer(f *elf.File) (ver string) {
 	if bytes.Contains(versionData, []byte(gccMarker)) {
 		// Check if this is really clang
 		if bytes.Contains(versionData, []byte(clangMarker)) {
-			clangVersionCatcher := regexp.MustCompile(`(\d+\.)(\d+\.)?(\*|\d+)\ `)
-			clangVersion := bytes.TrimSpace(clangVersionCatcher.Find(versionData))
+			clangVersion := bytes.TrimSpace(GCCVersionRegex0.Find(versionData))
 			return "Clang " + string(clangVersion)
 		}
 		// If the bytes are on this form: "GCC: (GNU) 6.3.0GCC: (GNU) 7.2.0",
@@ -134,8 +145,7 @@ func GCCVer(f *elf.File) (ver string) {
 			}
 		}
 		// Try the first regexp for picking out the version
-		versionCatcher1 := regexp.MustCompile(`\) (\d{1,4}\.)(\d+\.)?(\*|\d+)\ `)
-		gccVersion := bytes.TrimSpace(versionCatcher1.Find(versionData))
+		gccVersion := bytes.TrimSpace(GCCVersionRegex1.Find(versionData))
 		if len(gccVersion) > 0 {
 			if debug {
 				println("GCC #1 " + string(gccVersion[2:]))
@@ -143,8 +153,7 @@ func GCCVer(f *elf.File) (ver string) {
 			return "GCC " + string(gccVersion[2:])
 		}
 		// Try the second regexp for picking out the version
-		versionCatcher2 := regexp.MustCompile(` (\d{1,4}\.)(\d+\.)?(\*|\d+)`)
-		gccVersion = bytes.TrimSpace(versionCatcher2.Find(versionData))
+		gccVersion = bytes.TrimSpace(GCCVersionRegex2.Find(versionData))
 		if len(gccVersion) > 0 {
 			if debug {
 				println("GCC #2 " + string(gccVersion))
@@ -155,8 +164,7 @@ func GCCVer(f *elf.File) (ver string) {
 			}
 		}
 		// Try the third regexp for picking out the version
-		versionCatcher3 := regexp.MustCompile(`(\d{1,4}\.)(\d+\.)?(\*|\d+)`)
-		gccVersion = bytes.TrimSpace(versionCatcher3.Find(versionData))
+		gccVersion = bytes.TrimSpace(GCCVersionRegex3.Find(versionData))
 		if len(gccVersion) > 0 {
 			if debug {
 				println("GCC #3 " + string(gccVersion))
@@ -167,8 +175,7 @@ func GCCVer(f *elf.File) (ver string) {
 			}
 		}
 		// Try the fourth regexp for picking out the version
-		versionCatcher4 := regexp.MustCompile(`\) (\d{1,4}\.)(\d+\.)?(\*|\d+).(\d+)`)
-		gccVersion = bytes.TrimSpace(versionCatcher4.Find(versionData))
+		gccVersion = bytes.TrimSpace(GCCVersionRegex4.Find(versionData))
 		if len(gccVersion) > 0 {
 			if debug {
 				println("GCC #4 " + string(gccVersion))
@@ -283,8 +290,7 @@ func GoVer(f *elf.File) (ver string) {
 	if errData != nil {
 		return
 	}
-	versionCatcher := regexp.MustCompile(`go(\d+\.)(\d+\.)?(\*|\d+)`)
-	goVersion := string(versionCatcher.Find(b))
+	goVersion := string(GoVersionRegex.Find(b))
 	if strings.HasPrefix(goVersion, "go") {
 		return "Go " + goVersion[2:]
 	}
@@ -309,8 +315,7 @@ func PasVer(f *elf.File) (ver string) {
 	if errData != nil {
 		return
 	}
-	versionCatcher := regexp.MustCompile(`FPC\ (\d+\.)?(\d+\.)?(\*|\d+)`)
-	return string(versionCatcher.Find(b))
+	return string(PasVersionRegex.Find(b))
 
 }
 
@@ -344,8 +349,7 @@ func OCamlVer(f *elf.File) (ver string) {
 		// Probably not OCaml
 		return
 	}
-	versionCatcher := regexp.MustCompile(`(\d+\.)(\d+\.)?(\*|\d+)`)
-	ocamlVersion := "OCaml " + string(versionCatcher.Find(b))
+	ocamlVersion := "OCaml " + string(OcamlVersionRegex.Find(b))
 	if ocamlVersion == "" {
 		return "OCaml (unknown version)"
 	}

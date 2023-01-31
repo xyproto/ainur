@@ -61,6 +61,17 @@ func TestPowerPC3(t *testing.T) {
 	assert.Equal(t, MustExamine("testdata/nc_e500v2"), "unknown")
 }
 
+var doNotOptimiseString string
+func BenchmarkVoidLinux(b *testing.B) {
+	b.ReportAllocs()
+
+	var result string
+        for n := 0; n < b.N; n++ {
+		result = MustExamine("testdata/nano_voidlinux")
+        }
+	doNotOptimiseString = result
+}
+
 func TestVersionCompare(t *testing.T) {
 	assert.Equal(t, FirstIsGreater("2", "1.0.7.abc"), true)
 	assert.Equal(t, FirstIsGreater("2.0", "2.0 alpha1"), true)
