@@ -33,22 +33,20 @@ var (
 	GCCVersionRegex4  = regexp.MustCompile(`\) (\d{1,4}\.)(\d+\.)?(\*|\d+).(\d+)`)
 )
 
-var (
-	// compilerVersionFunctions is a slice of functions that can be used
-	// for discovering a version string from an ELF file, ordered from
-	// the more specific to the more ambigous ones.
-	compilerVersionFunctions = []func(*elf.File) string{
-		GoVer,
-		OCamlVer,
-		GHCVer,
-		RustVerUnstripped,
-		RustVerStripped,
-		DVer,
-		GCCVer,
-		PasVer,
-		TCCVer,
-	}
-)
+// compilerVersionFunctions is a slice of functions that can be used
+// for discovering a version string from an ELF file, ordered from
+// the more specific to the more ambigous ones.
+var compilerVersionFunctions = []func(*elf.File) string{
+	GoVer,
+	OCamlVer,
+	GHCVer,
+	RustVerUnstripped,
+	RustVerStripped,
+	DVer,
+	GCCVer,
+	PasVer,
+	TCCVer,
+}
 
 // versionSum takes a slice of strings that are the parts of a version number.
 // The parts are converted to numbers. If they can't be converted, they count
@@ -315,7 +313,6 @@ func PasVer(f *elf.File) (ver string) {
 		return
 	}
 	return string(PasVersionRegex.Find(b))
-
 }
 
 // TCCVer returns "TCC" or an empty string

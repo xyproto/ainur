@@ -1,8 +1,9 @@
 package ainur
 
 import (
-	"github.com/bmizerany/assert"
 	"testing"
+
+	"github.com/bmizerany/assert"
 )
 
 func TestVoidLinuxNano(t *testing.T) {
