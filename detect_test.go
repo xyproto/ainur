@@ -30,6 +30,10 @@ func TestRust(t *testing.T) {
 	assert.Equal(t, MustExamine("testdata/rust_hello"), "Rust 1.27.0-nightly")
 }
 
+func TestGo(t *testing.T) {
+	assert.Equal(t, MustExamine("testdata/go_hello"), "Go 1.20.1")
+}
+
 func TestRust2(t *testing.T) {
 	assert.Equal(t, MustExamine("testdata/bat"), "Rust (GCC 8.2.1)")
 }
