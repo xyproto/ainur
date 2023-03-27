@@ -514,8 +514,7 @@ func Compiler(f *elf.File) string {
 
 // Stripped returns true if symbols can not be retrieved from the given ELF file
 func Stripped(f *elf.File) bool {
-	_, err := f.Symbols()
-	return err != nil
+	return f.SectionByType(elf.SHT_SYMTAB) == nil
 }
 
 // Examine tries to discover which compiler and compiler version the given
