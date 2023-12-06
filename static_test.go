@@ -2,14 +2,16 @@ package ainur
 
 import (
 	"testing"
-
-	"github.com/bmizerany/assert"
 )
 
 func TestStatic(t *testing.T) {
-	assert.Equal(t, MustExamineStatic("testdata/go_upx_amd64_static"), true)
+	if result := MustExamineStatic("testdata/go_upx_amd64_static"); !result {
+		t.Errorf("Expected true for static file, got %v", result)
+	}
 }
 
 func TestDynamic(t *testing.T) {
-	assert.Equal(t, MustExamineStatic("testdata/nano_voidlinux"), false)
+	if result := MustExamineStatic("testdata/nano_voidlinux"); result {
+		t.Errorf("Expected false for dynamic file, got %v", result)
+	}
 }

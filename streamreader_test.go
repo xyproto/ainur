@@ -4,14 +4,16 @@ import (
 	"bytes"
 	"io"
 	"testing"
-
-	"github.com/bmizerany/assert"
 )
 
 func TestStreamReader(t *testing.T) {
 	buf := bytes.NewBuffer([]byte("aaaabbbbcccc"))
 	r, err := NewStreamReader(buf, 6)
-	assert.Equal(t, nil, err)
+
+	// Check for errors
+	if err != nil {
+		t.Errorf("Expected no error, but got %v", err)
+	}
 
 	found := false
 	for {
@@ -19,11 +21,17 @@ func TestStreamReader(t *testing.T) {
 		if err == io.EOF {
 			break
 		}
-
-		if bytes.Index(b, []byte("bbbb")) != -1 {
+		if err != nil {
+			t.Errorf("Unexpected error during reading: %v", err)
+			break
+		}
+		if bytes.Contains(b, []byte("bbbb")) {
 			found = true
 		}
 	}
 
-	assert.Equal(t, true, found)
+	// Check if "bbbb" was found
+	if !found {
+		t.Errorf("Expected to find 'bbbb' in the stream, but did not")
+	}
 }
