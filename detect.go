@@ -7,9 +7,7 @@ import (
 	"debug/elf"
 	"errors"
 	"io"
-	"math"
 	"regexp"
-	"strconv"
 	"strings"
 )
 
@@ -23,15 +21,32 @@ const (
 )
 
 var (
-	GHCVersionRegex   = regexp.MustCompile(`GHC\ (\d{1,4}\.)(\d+\.)?(\d+)`)
-	GoVersionRegex    = regexp.MustCompile(`go(\d+\.)(\d+\.)?(\*|\d+)`)
-	PasVersionRegex   = regexp.MustCompile(`FPC\ (\d+\.)?(\d+\.)?(\*|\d+)`)
+	// GHCVersionRegex is a regexp for matching Glasgow Haskell Compiler version strings
+	GHCVersionRegex = regexp.MustCompile(`GHC\ (\d{1,4}\.)(\d+\.)?(\d+)`)
+
+	// GoVersionRegex is a regexp for matching Go version strings
+	GoVersionRegex = regexp.MustCompile(`go(\d+\.)(\d+\.)?(\*|\d+)`)
+
+	// PasVersionRegex is a regexp for matching Free Pascal Compiler version strings
+	PasVersionRegex = regexp.MustCompile(`FPC\ (\d+\.)?(\d+\.)?(\*|\d+)`)
+
+	// OcamlVersionRegex is a regexp for matching OCaml version strings
 	OcamlVersionRegex = regexp.MustCompile(`(\d+\.)(\d+\.)?(\*|\d+)`)
-	GCCVersionRegex0  = regexp.MustCompile(`(\d+\.)(\d+\.)?(\*|\d+)\ `)
-	GCCVersionRegex1  = regexp.MustCompile(`\) (\d{1,4}\.)(\d+\.)?(\*|\d+)\ `)
-	GCCVersionRegex2  = regexp.MustCompile(` (\d{1,4}\.)(\d+\.)?(\*|\d+)`)
-	GCCVersionRegex3  = regexp.MustCompile(`(\d{1,4}\.)(\d+\.)?(\*|\d+)`)
-	GCCVersionRegex4  = regexp.MustCompile(`\) (\d{1,4}\.)(\d+\.)?(\*|\d+).(\d+)`)
+
+	// GCCVersionRegex0 is another regexp for matching GCC version strings
+	GCCVersionRegex0 = regexp.MustCompile(`(\d+\.)(\d+\.)?(\*|\d+)\ `)
+
+	// GCCVersionRegex1 is another regexp for matching GCC version strings
+	GCCVersionRegex1 = regexp.MustCompile(`\) (\d{1,4}\.)(\d+\.)?(\*|\d+)\ `)
+
+	// GCCVersionRegex2 is another regexp for matching GCC version strings
+	GCCVersionRegex2 = regexp.MustCompile(` (\d{1,4}\.)(\d+\.)?(\*|\d+)`)
+
+	// GCCVersionRegex3 is another regexp for matching GCC version strings
+	GCCVersionRegex3 = regexp.MustCompile(`(\d{1,4}\.)(\d+\.)?(\*|\d+)`)
+
+	// GCCVersionRegex4 is another regexp for matching GCC version strings
+	GCCVersionRegex4 = regexp.MustCompile(`\) (\d{1,4}\.)(\d+\.)?(\*|\d+).(\d+)`)
 )
 
 // compilerVersionFunctions is a slice of functions that can be used
@@ -47,40 +62,6 @@ var compilerVersionFunctions = []func(*elf.File) string{
 	GCCVer,
 	PasVer,
 	TCCVer,
-}
-
-// versionSum takes a slice of strings that are the parts of a version number.
-// The parts are converted to numbers. If they can't be converted, they count
-// as less than nothing. The parts are then summed together, but with more
-// emphasis put on the earlier numbers. 2.0.0.0 has emphasis 2000.
-// The sum is then returned.
-func versionSum(parts []string) int {
-	sum := 0
-	length := len(parts)
-	for i := length - 1; i >= 0; i-- {
-		num, err := strconv.Atoi(parts[i])
-		if err != nil {
-			num = -1
-		}
-		sum += num * int(math.Pow(float64(10), float64(length-i-1)))
-	}
-	return sum
-}
-
-// FirstIsGreater checks if the first version number is greater than the second one.
-// It uses a relatively simple algorithm, where all non-numbers counts as less than "0".
-func FirstIsGreater(a, b string) bool {
-	aParts := strings.Split(a, ".")
-	bParts := strings.Split(b, ".")
-	// Expand the shortest version list with zeroes
-	for len(aParts) < len(bParts) {
-		aParts = append(aParts, "0")
-	}
-	for len(bParts) < len(aParts) {
-		bParts = append(bParts, "0")
-	}
-	// The two lists that are being compared should be of the same length
-	return versionSum(aParts) > versionSum(bParts)
 }
 
 // GHCVer returns the GHC compiler version or an empty string
