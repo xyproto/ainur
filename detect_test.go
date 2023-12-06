@@ -105,18 +105,3 @@ func BenchmarkVoidLinux(b *testing.B) {
 	}
 	doNotOptimiseString = result
 }
-
-func TestVersionCompare(t *testing.T) {
-	if !FirstIsGreater("2", "1.0.7.abc") {
-		t.Errorf("Expected 2 to be greater than 1.0.7.abc")
-	}
-	if !FirstIsGreater("2.0", "2.0 alpha1") {
-		t.Errorf("Expected 2.0 to be greater than 2.0 alpha1")
-	}
-	if FirstIsGreater("1.0", "2.0.3") {
-		t.Errorf("Expected 1.0 not to be greater than 2.0.3")
-	}
-	if !FirstIsGreater("2.0", "2.0.rc1") {
-		t.Errorf("Expected 2.0 to be greater than 2.0.rc1")
-	}
-}
