@@ -5,6 +5,7 @@ package ainur
 import (
 	"bytes"
 	"debug/elf"
+	"encoding/binary"
 	"errors"
 	"io"
 	"regexp"
@@ -334,9 +335,179 @@ func DVer(f *elf.File) (ver string) {
 	return
 }
 
+func offsetOf(f *elf.File, addr uint64) (*elf.Prog, uint64) {
+	for _, prog := range f.Progs {
+		if prog.Vaddr <= addr && addr <= prog.Vaddr+prog.Filesz-1 {
+			return prog, addr - prog.Vaddr
+		}
+	}
+	return nil, 0
+}
+
+// buildinfoGoVer returns the Go compiler version embedded in the
+// `.go.buildinfo` section, or in the first writable data segment, or
+// an empty string if it could not be read.
+// example output: "Go 1.22.1"
+func buildinfoGoVer(f *elf.File) string {
+	// This function more-or-less closely follows
+	// `debug/buildinfo` from the standard library, except
+	// that it only works on ELF, and it uses
+	// StreamReader to read.
+	//
+	// Most of the code there is not exposed publicly
+	// (and the public API takes io.Reader, not elf.File),
+	// so we reproduce it here rather than being able to
+	// just call into it.
+	decodeString := func(data []byte) []byte {
+		u, n := binary.Uvarint(data)
+		if n <= 0 || u > uint64(len(data)-n) {
+			return nil
+		}
+		return data[n : uint64(n)+u]
+	}
+	var addr, size uint64
+	for _, s := range f.Sections {
+		if s.Name == ".go.buildinfo" {
+			addr, size = s.Addr, s.Size
+			break
+		}
+	}
+	if size == 0 {
+		for _, p := range f.Progs {
+			if p.Type == elf.PT_LOAD && p.Flags&(elf.PF_X|elf.PF_W) == elf.PF_W {
+				addr, size = p.Vaddr, p.Memsz
+			}
+		}
+	}
+	if size == 0 {
+		return ""
+	}
+
+	prog, offset := offsetOf(f, addr)
+	if prog == nil {
+		return ""
+	}
+	n := prog.Filesz - offset
+	if n > size {
+		n = size
+	}
+	r := io.NewSectionReader(prog, int64(addr-prog.Vaddr), int64(n))
+
+	sr, err := NewStreamReader(r, 8192)
+	if err != nil {
+		return ""
+	}
+	const (
+		buildInfoAlign = 16
+		buildInfoSize  = 32
+	)
+	var data []byte
+	for {
+		if data != nil {
+			break
+		}
+		b, err := sr.Next()
+		if err != nil {
+			return ""
+		}
+		for {
+			i := bytes.Index(b, []byte("\xff Go buildinf:"))
+			if i < 0 || len(b)-i < buildInfoSize {
+				break
+			}
+			if i%buildInfoAlign == 0 {
+				data = b[i:]
+				break
+			}
+			// round up to next offset
+			b = b[(i+buildInfoAlign-1)&^(buildInfoAlign-1):]
+		}
+	}
+	// Decode the blob.
+	// The first 14 bytes are buildInfoMagic.
+	// The next two bytes indicate pointer size in bytes (4 or 8) and endianness
+	// (0 for little, 1 for big).
+	// Two virtual addresses to Go strings follow that: runtime.buildVersion,
+	// and runtime.modinfo.
+	// On 32-bit platforms, the last 8 bytes are unused.
+	// If the endianness has the 2 bit set, then the pointers are zero
+	// and the 32-byte header is followed by varint-prefixed string data
+	// for the two string values we care about.
+	//
+	// NOTE: The above comment is from Go's debug/buildinfo.
+	// In this version, we only extract runtime.buildVersion, not
+	// runtime.modinfo.
+	ptrSize := int(data[14])
+	var result []byte
+	if data[15]&2 != 0 {
+		result = decodeString(data[32:])
+	} else {
+		bigEndian := data[15] != 0
+		var bo binary.ByteOrder
+		if bigEndian {
+			bo = binary.BigEndian
+		} else {
+			bo = binary.LittleEndian
+		}
+		var addr uint64
+		if ptrSize == 4 {
+			addr = uint64(bo.Uint32(data[16:]))
+		} else if ptrSize == 8 {
+			addr = bo.Uint64(data[16:])
+		}
+		prog, offset := offsetOf(f, addr)
+		if prog == nil {
+			return ""
+		}
+		hdr := make([]byte, 2*ptrSize)
+		_, err := prog.ReadAt(hdr, int64(offset))
+		if err != nil {
+			return ""
+		}
+		var dataAddr, dataLen uint64
+		if ptrSize == 4 {
+			dataAddr = uint64(bo.Uint32(hdr))
+			dataLen = uint64(bo.Uint32(hdr[4:]))
+		} else {
+			dataAddr = bo.Uint64(hdr)
+			dataLen = bo.Uint64(hdr[8:])
+		}
+		dataProg, dataOffset := offsetOf(f, dataAddr)
+		if dataProg == nil {
+			return ""
+		}
+		// Our copy of this code doesn't have
+		// access to the Go-internal `saferio` package for reading possibly
+		// gibberish lengths of data without OOMing, so instead
+		// just check that the length isn't outrageous.
+		if dataLen > 1024 {
+			return ""
+		}
+		data := make([]byte, dataLen)
+		_, err = prog.ReadAt(data, int64(dataOffset))
+		if err != nil {
+			return ""
+		}
+		result = data
+	}
+	s := string(result)
+	if strings.HasPrefix(s, "go") {
+		return "Go " + s[2:]
+	}
+	return ""
+}
+
 // GoVer returns the Go compiler version or an empty string
 // example output: "Go 1.8.3"
-func GoVer(f *elf.File) (ver string) {
+func GoVer(f *elf.File) string {
+	buildinfoVer := buildinfoGoVer(f)
+	if buildinfoVer != "" {
+		return string(buildinfoVer)
+	}
+	return rodataGoVer(f)
+}
+
+func rodataGoVer(f *elf.File) (ver string) {
 	sec := f.Section(".rodata")
 	if sec == nil {
 		return
