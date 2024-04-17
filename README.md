@@ -6,7 +6,8 @@ Go package for figuring out which compiler and compiler version was used for com
 
 ### Utilities that uses Ainur
 
-* [elfinfo](https://github.com/xyproto/elfinfo) ([webpage](https://elfinfo.roboticoverlords.org))
+* [cdetect](https://github.com/xyproto/cdetect) 
+* [elfinfo](https://github.com/xyproto/elfinfo) ([webpage](https://elfinfo.roboticoverlords.org)) (very similar to cdetect)
 
 ### Features and limitations
 
