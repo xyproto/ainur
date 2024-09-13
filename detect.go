@@ -52,7 +52,7 @@ var (
 
 // compilerVersionFunctions is a slice of functions that can be used
 // for discovering a version string from an ELF file, ordered from
-// the more specific to the more ambigous ones.
+// the more specific to the more ambiguous ones.
 var compilerVersionFunctions = []func(*elf.File) string{
 	GoVer,
 	OCamlVer,
